@@ -23,7 +23,7 @@ router.get('/', function(req, res, next) {
   const sql = "select * from users";
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
-    res.render('users/index',{users : result});
+    res.render('users/index',{users : result, title: 'User'});
   });
 });
 
@@ -48,7 +48,7 @@ router.get('/delete/:id',(req,res)=>{
 
 /* create users listing. */
 router.get('/create', function(req, res, next) {
-  res.render('users/create');
+  res.render('users/create', {title: 'User create'});
 });
 
 /* edit users listing. */
@@ -56,7 +56,7 @@ router.get('/edit/:id',(req,res)=>{
   const sql = "SELECT * FROM users WHERE id = ?";
   con.query(sql,[req.params.id],function (err, result, fields) {
     if (err) throw err;
-    res.render('users/edit',{user : result});
+    res.render('users/edit',{user : result, title: 'User edit'});
   });
 });
 
