@@ -1,0 +1,16 @@
+version: '3'
+services:
+  nodejs:
+    build: ./docker/node
+    # 環境変数
+    environment:
+      - DEBUG=app:*
+    tty: true
+    # ホスト側のポート：コンテナのポート
+    ports:
+      - '8080:3000'
+    # ホスト側のsrcをコンテナのappにマウント
+    volumes:
+      - ./src:/usr/src/app
+    # 起動後に実行するコマンド
+    command: npm run dev
