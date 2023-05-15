@@ -1,10 +1,21 @@
 FROM node:16
 
+# Create app directory
 WORKDIR /usr/src/app
 
-# アプリケーションの依存関係をインストールする
-# ワイルドカードを使用して、package.json と package-lock.json の両方が確実にコピーされるようにします。
-# 可能であれば (npm@5+)
-#COPY package*.json ./
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+# COPY package*.json ./
 
 RUN npm install
+
+RUN npm install -D nodemon
+
+RUN npm install mysql
+
+# Bundle app source
+COPY . .
+EXPOSE 3000
+
+CMD [ "npm", "start" ]

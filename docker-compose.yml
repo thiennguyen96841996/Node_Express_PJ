@@ -13,4 +13,43 @@ services:
     volumes:
       - ./src:/usr/src/app
     # 起動後に実行するコマンド
-    command: npm run dev
+    command: sh -c 'npx tsc; npm run dev'
+    depends_on:
+      - db
+    networks:
+      - express
+
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: express
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: express
+      MYSQL_ROOT_PASSWORD: rootpw
+      TZ: "Asia/Tokyo"
+    volumes:
+      - "./docker/mysql/local/init:/docker-entrypoint-initdb.d"
+      - "./docker/mysql/local/data:/var/lib/mysql"
+    networks:
+      - express
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    depends_on:
+      - db
+    ports:
+      - 10099:80
+    networks:
+      - express
+    environment:
+      PMA_HOST: "db"
+      PMA_USER: root
+      PMA_PASSWORD: rootpw
+
+networks:
+  express:
