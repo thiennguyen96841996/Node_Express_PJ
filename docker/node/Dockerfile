@@ -10,10 +10,6 @@ WORKDIR /usr/src/app
 
 RUN npm install
 
-RUN npm install -D nodemon
-
-RUN npm install mysql
-
 # Bundle app source
 COPY . .
 EXPOSE 3000
