@@ -1,0 +1,11 @@
+<% extend('main') %>
+
+<form action="/signin" method="post">
+    <label>ユーザ名</label>
+    <input required type="text" name="username"/>
+    <br>
+    <label>パスワード</label>
+    <input required type="password" name="password"/>
+    <br>
+    <input type="submit" value="Sign in"/>
+</form>

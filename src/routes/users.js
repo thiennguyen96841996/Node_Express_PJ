@@ -15,11 +15,6 @@ const con = mysql.createConnection({
   database: 'express'
 });
 
-con.connect(function(err) {
-  if (err) throw err;
-  console.log('Mysql connected');
-});
-
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 /* GET users listing. */

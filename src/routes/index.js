@@ -5,6 +5,9 @@ const knex = require('../db/knex');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+    const userId = req.session.userid;
+    const isAuth = Boolean(userId);
+
     knex("tasks")
     .select("*")
     .then(function (results) {
@@ -12,18 +15,23 @@ router.get('/', function(req, res, next) {
         res.render('index', {
             title: 'ToDo App',
             todos: results,
+            isAuth: isAuth,
         });
     })
     .catch(function (err) {
         console.error(err);
         res.render('index', {
             title: 'ToDo App',
+            isAuth: isAuth,
         });
     });
 });
 
 router.post('/', function(req, res, next) {
-  const todo = req.body.add;
+    const userId = req.session.userid;
+    const isAuth = Boolean(userId);
+    const todo = req.body.add;
+
     knex("tasks")
     .insert({content: todo})
     .then(function () {
@@ -33,6 +41,7 @@ router.post('/', function(req, res, next) {
         console.error(err);
         res.render('index', {
             title: 'ToDo App',
+            isAuth: isAuth,
         });
     });
 });
