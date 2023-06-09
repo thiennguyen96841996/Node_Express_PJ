@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const knex = require('../db/knex');
+const bcrypt = require("bcrypt");
 
 router.get('/', function (req, res, next) {
     const userId = req.session.userid;
@@ -12,6 +13,8 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
+    const userId = req.session.userid;
+    const isAuth = Boolean(userId);
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
@@ -20,15 +23,16 @@ router.post('/', function (req, res, next) {
     knex("users1")
     .where({name: username})
     .select("*")
-    .then(function (result) {
+    .then(async function (result) {
         if (result.length !== 0) {
             res.render("signup", {
                 title: "Sign up",
                 errorMessage: ["このユーザ名は既に使われています"],
             })
         } else if (password === repassword) {
+            const hashedPassword = await bcrypt.hash(password, 10);
             knex("users1")
-                .insert({name: username, password: password, email: email})
+                .insert({name: username, password: hashedPassword, email: email})
                 .then(function () {
                     res.redirect("/");
                 })
@@ -37,12 +41,14 @@ router.post('/', function (req, res, next) {
                     res.render("signup", {
                         title: "Sign up",
                         errorMessage: [err.sqlMessage],
+                        isAuth: isAuth,
                     });
                 });
         } else {
             res.render("signup", {
                 title: "Sign up",
                 errorMessage: ["パスワードが一致しません"],
+                isAuth: isAuth,
             });
         }
     })
@@ -51,6 +57,7 @@ router.post('/', function (req, res, next) {
         res.render("signup", {
             title: "Sign up",
             errorMessage: [err.sqlMessage],
+            isAuth: false,
         });
     });
 });
