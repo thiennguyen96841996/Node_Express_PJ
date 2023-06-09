@@ -3,8 +3,11 @@ const router = express.Router();
 const knex = require('../db/knex');
 
 router.get('/', function (req, res, next) {
+    const userId = req.session.userid;
+    const isAuth = Boolean(userId);
     res.render('signin', {
         title: 'Sign in',
+        isAuth: isAuth,
     });
 });
 
@@ -12,7 +15,7 @@ router.post('/', function (req, res, next) {
     const username = req.body.username;
     const password = req.body.password;
 
-    knex("users")
+    knex("users1")
         .where({
             name: username,
             password: password,
